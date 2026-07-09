@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g. 1.0.1)"
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate version matches version.txt and CHANGELOG.md
+        run: |
+          VERSION="${{ inputs.version }}"
+          VERSION_TXT=$(cat version.txt | tr -d '[:space:]')
+          CHANGELOG_VERSION=$(grep -E "^## [0-9]+\.[0-9]+\.[0-9]+" CHANGELOG.md | head -n 1 | sed -E 's/^## ([0-9]+\.[0-9]+\.[0-9]+(-(alpha|beta)(\.[0-9]+)?)?).*/\1/')
+          if [[ "$VERSION" != "$VERSION_TXT" ]]; then
+            echo "Input version '${VERSION}' does not match version.txt '${VERSION_TXT}'"
+            exit 1
+          fi
+          if [[ "$VERSION" != "$CHANGELOG_VERSION" ]]; then
+            echo "Input version '${VERSION}' does not match CHANGELOG.md top version '${CHANGELOG_VERSION}'"
+            exit 1
+          fi
+          echo "[✓] Version ${VERSION} is consistent."
+
+      - name: Extract changelog notes for this version
+        id: notes
+        run: |
+          VERSION="${{ inputs.version }}"
+          NOTES=$(awk "/^## ${VERSION}/{found=1; next} found && /^## /{exit} found{print}" CHANGELOG.md)
+          echo "notes<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$NOTES" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub release (publishes to Marketplace automatically)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ inputs.version }}"
+          gh release create "v${VERSION}" \
+            --repo "${{ github.repository }}" \
+            --title "v${VERSION}" \
+            --target main \
+            --latest \
+            --notes "${{ steps.notes.outputs.notes }}"
+
+      - name: Update major-version alias tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ inputs.version }}"
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          MINOR=$(echo "$VERSION" | cut -d. -f1-2)
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -f "v${MAJOR}"
+          git tag -f "v${MINOR}"
+          git push origin "v${MAJOR}" --force
+          git push origin "v${MINOR}" --force
