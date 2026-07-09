@@ -10,8 +10,8 @@ BREAK_ON_VULNS="${INPUT_BREAK_ON_VULNERABILITIES:-true}"
 SEVERITY="${INPUT_VULNERABILITY_SEVERITY:-high}"
 OUTPUT_DIR="${INPUT_OUTPUT_DIR:-js-recon-output}"
 
-echo "[js-recon] Installing js-recon@${VERSION}..."
-npm install -g "js-recon@${VERSION}" --silent
+echo "[js-recon] Installing @shriyanss/js-recon@${VERSION}..."
+npm install -g "@shriyanss/js-recon@${VERSION}"
 INSTALLED_VERSION=$(js-recon --version 2>/dev/null || echo "unknown")
 echo "[js-recon] Installed version: ${INSTALLED_VERSION}"
 
