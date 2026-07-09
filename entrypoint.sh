@@ -12,6 +12,8 @@ OUTPUT_DIR="${INPUT_OUTPUT_DIR:-js-recon-output}"
 
 echo "[js-recon] Installing js-recon@${VERSION}..."
 npm install -g "js-recon@${VERSION}" --silent
+INSTALLED_VERSION=$(js-recon --version 2>/dev/null || echo "unknown")
+echo "[js-recon] Installed version: ${INSTALLED_VERSION}"
 
 if [ -n "${START_CMD}" ]; then
     echo "[js-recon] Starting app with: ${START_CMD}"
@@ -35,7 +37,10 @@ if [ -n "${START_CMD}" ]; then
 fi
 
 echo "[js-recon] Running js-recon against ${URL}..."
-js-recon run -u "${URL}" -o "${OUTPUT_DIR}" --no-sandbox -y -k
+js-recon run -u "${URL}" -o "${OUTPUT_DIR}" --no-sandbox -y -k || {
+    echo "[js-recon] ERROR: js-recon run failed."
+    exit 1
+}
 
 echo "[js-recon] Scan complete. Output saved to ${OUTPUT_DIR}/"
 

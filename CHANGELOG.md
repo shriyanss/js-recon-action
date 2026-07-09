@@ -1,6 +1,13 @@
 # Changelog
 
-## 1.0.0 - (unreleased)
+## 1.0.1 - (unreleased)
+
+### Fixed
+
+- Print installed JS Recon version after install step for easier debugging
+- Ensure entrypoint exits non-zero when `js-recon run` itself fails
+
+## 1.0.0 - 2026-07-09
 
 ### Added
 
