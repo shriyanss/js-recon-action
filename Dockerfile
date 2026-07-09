@@ -28,4 +28,8 @@ RUN ./node_modules/.bin/puppeteer browsers install chrome && \
 
 ENV IS_DOCKER=true
 ENV NODE_OPTIONS="--max-http-header-size=99999999"
+# Puppeteer cache was built as pptruser; point root at the same location
+ENV PUPPETEER_CACHE_DIR=/home/pptruser/.cache/puppeteer
+
+USER root
 ENTRYPOINT ["/entrypoint.sh"]
