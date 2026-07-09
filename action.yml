@@ -1,0 +1,61 @@
+name: "JS Recon"
+description: "Run JS Recon to analyze JavaScript bundles for exposed endpoints, source maps, and client-side vulnerabilities"
+author: "Shriyans Sudhi"
+
+branding:
+  icon: "shield"
+  color: "orange"
+
+inputs:
+  url:
+    description: "URL to analyze (can be an external URL or http://localhost:PORT)"
+    required: true
+  start-cmd:
+    description: "Shell command to start the app before scanning (for localhost URLs)"
+    required: false
+    default: ""
+  working-directory:
+    description: "Working directory for start-cmd"
+    required: false
+    default: "."
+  version:
+    description: "JS Recon version to install (e.g. latest, alpha, 1.3.1-beta.1)"
+    required: false
+    default: "latest"
+  break-on-map-files:
+    description: "Fail if .map source map files are detected in the output"
+    required: false
+    default: "true"
+  break-on-vulnerabilities:
+    description: "Fail if vulnerabilities at or above the specified severity are detected"
+    required: false
+    default: "true"
+  vulnerability-severity:
+    description: "Minimum severity to fail on: low, medium, or high"
+    required: false
+    default: "high"
+  output-dir:
+    description: "Directory where JS Recon output files are saved"
+    required: false
+    default: "js-recon-output"
+
+outputs:
+  map-files-found:
+    description: "Whether .map source map files were detected (true or false)"
+  vulnerability-count:
+    description: "Number of vulnerabilities found at or above the configured severity"
+  output-path:
+    description: "Absolute path to the JS Recon output directory"
+
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  env:
+    INPUT_URL: ${{ inputs.url }}
+    INPUT_START_CMD: ${{ inputs.start-cmd }}
+    INPUT_WORKING_DIRECTORY: ${{ inputs.working-directory }}
+    INPUT_VERSION: ${{ inputs.version }}
+    INPUT_BREAK_ON_MAP_FILES: ${{ inputs.break-on-map-files }}
+    INPUT_BREAK_ON_VULNERABILITIES: ${{ inputs.break-on-vulnerabilities }}
+    INPUT_VULNERABILITY_SEVERITY: ${{ inputs.vulnerability-severity }}
+    INPUT_OUTPUT_DIR: ${{ inputs.output-dir }}
