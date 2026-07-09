@@ -38,24 +38,24 @@
 
 ## Inputs
 
-| Input | Required | Default | Description |
-|-------|----------|---------|-------------|
-| `url` | Yes | — | URL to scan (external or `http://localhost:PORT`) |
-| `start-cmd` | No | — | Shell command to start the app (for localhost URLs) |
-| `working-directory` | No | `.` | Working directory for `start-cmd` |
-| `version` | No | `latest` | JS Recon version (e.g. `latest`, `alpha`, `1.3.1-beta.1`) |
-| `break-on-map-files` | No | `true` | Fail if `.map` source map files are detected |
-| `break-on-vulnerabilities` | No | `true` | Fail if vulnerabilities at or above threshold are detected |
-| `vulnerability-severity` | No | `high` | Minimum severity to fail on: `low`, `medium`, or `high` |
-| `output-dir` | No | `js-recon-output` | Directory to save output files |
+| Input                      | Required | Default           | Description                                                |
+| -------------------------- | -------- | ----------------- | ---------------------------------------------------------- |
+| `url`                      | Yes      | —                 | URL to scan (external or `http://localhost:PORT`)          |
+| `start-cmd`                | No       | —                 | Shell command to start the app (for localhost URLs)        |
+| `working-directory`        | No       | `.`               | Working directory for `start-cmd`                          |
+| `version`                  | No       | `latest`          | JS Recon version (e.g. `latest`, `alpha`, `1.3.1-beta.1`)  |
+| `break-on-map-files`       | No       | `true`            | Fail if `.map` source map files are detected               |
+| `break-on-vulnerabilities` | No       | `true`            | Fail if vulnerabilities at or above threshold are detected |
+| `vulnerability-severity`   | No       | `high`            | Minimum severity to fail on: `low`, `medium`, or `high`    |
+| `output-dir`               | No       | `js-recon-output` | Directory to save output files                             |
 
 ## Outputs
 
-| Output | Description |
-|--------|-------------|
-| `map-files-found` | `true` if `.map` source map files were detected, `false` otherwise |
-| `vulnerability-count` | Number of findings at or above the configured severity |
-| `output-path` | Absolute path to the output directory |
+| Output                | Description                                                        |
+| --------------------- | ------------------------------------------------------------------ |
+| `map-files-found`     | `true` if `.map` source map files were detected, `false` otherwise |
+| `vulnerability-count` | Number of findings at or above the configured severity             |
+| `output-path`         | Absolute path to the output directory                              |
 
 ---
 
@@ -63,14 +63,14 @@
 
 JS Recon produces the following files in the output directory:
 
-| File | Description |
-|------|-------------|
-| `analyze.json` | All vulnerability findings |
-| `mapped.json` | Parsed webpack/Vite bundle structure |
+| File                  | Description                              |
+| --------------------- | ---------------------------------------- |
+| `analyze.json`        | All vulnerability findings               |
+| `mapped.json`         | Parsed webpack/Vite bundle structure     |
 | `mapped-openapi.json` | Extracted HTTP endpoints as OpenAPI spec |
-| `endpoints.json` | Client-side routes |
-| `report.html` | Full HTML report |
-| `js-recon.db` | SQLite database of all findings |
+| `endpoints.json`      | Client-side routes                       |
+| `report.html`         | Full HTML report                         |
+| `js-recon.db`         | SQLite database of all findings          |
 
 ---
 
@@ -84,7 +84,7 @@ If `.map` files are publicly accessible, the action fails by default:
 - uses: shriyanss/js-recon-action@v1
   with:
     url: https://target.com
-    break-on-map-files: true  # default
+    break-on-map-files: true # default
 ```
 
 To disable: set `break-on-map-files: false`.
@@ -98,7 +98,7 @@ Control which severity level triggers a failure:
   with:
     url: https://target.com
     break-on-vulnerabilities: true
-    vulnerability-severity: medium  # fail on medium, high
+    vulnerability-severity: medium # fail on medium, high
 ```
 
 Available severities: `low`, `medium`, `high` (default: `high`).

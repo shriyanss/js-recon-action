@@ -1,10 +1,10 @@
 {
-    "name": "js-recon-action",
-    "version": "1.0.0",
-    "description": "GitHub Action for JS Recon",
-    "type": "module",
-    "scripts": {
-        "test": "node --test scripts/check-findings.test.js"
-    },
-    "license": "MIT"
+  "name": "js-recon-action",
+  "version": "1.0.0",
+  "description": "GitHub Action for JS Recon",
+  "type": "module",
+  "scripts": {
+    "test": "node --test scripts/check-findings.test.js"
+  },
+  "license": "MIT"
 }
