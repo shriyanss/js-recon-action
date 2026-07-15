@@ -10,14 +10,17 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    # PUBLISH_PAT (owned by js-recon-bot) lives in this environment. Using it to
+    # create the release means the release is authored by js-recon-bot and is
+    # published to the GitHub Marketplace (the default GITHUB_TOKEN / github-actions
+    # bot cannot publish to the Marketplace).
+    environment: publish-marketplace
     steps:
       - name: Checkout main
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           ref: main
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PUBLISH_PAT }}
 
       - name: Validate version matches version.txt and CHANGELOG.md
         run: |
@@ -35,17 +38,17 @@ jobs:
           echo "[✓] Version ${VERSION} is consistent."
 
       - name: Extract changelog notes for this version
-        id: notes
         run: |
           VERSION="${{ inputs.version }}"
-          NOTES=$(awk "/^## ${VERSION}/{found=1; next} found && /^## /{exit} found{print}" CHANGELOG.md)
-          echo "notes<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$NOTES" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
+          # Write to a file and pass via --notes-file so markdown (backticks, etc.)
+          # is preserved verbatim instead of being interpreted by the shell.
+          awk "/^## ${VERSION}([^0-9.]|$)/{found=1; next} found && /^## /{exit} found{print}" CHANGELOG.md > release-notes.md
+          echo "----- release notes -----"
+          cat release-notes.md
 
-      - name: Create GitHub release (publishes to Marketplace automatically)
+      - name: Create GitHub release (publishes to Marketplace)
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PUBLISH_PAT }}
         run: |
           VERSION="${{ inputs.version }}"
           gh release create "v${VERSION}" \
@@ -53,17 +56,17 @@ jobs:
             --title "v${VERSION}" \
             --target main \
             --latest \
-            --notes "${{ steps.notes.outputs.notes }}"
+            --notes-file release-notes.md
 
       - name: Update major-version alias tags
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PUBLISH_PAT }}
         run: |
           VERSION="${{ inputs.version }}"
           MAJOR=$(echo "$VERSION" | cut -d. -f1)
           MINOR=$(echo "$VERSION" | cut -d. -f1-2)
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "js-recon-bot"
+          git config user.email "js-recon-bot@users.noreply.github.com"
           git tag -f "v${MAJOR}"
           git tag -f "v${MINOR}"
           git push origin "v${MAJOR}" --force
