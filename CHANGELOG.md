@@ -1,6 +1,18 @@
 # Changelog
 
-## 1.0.1 - (unreleased)
+## 1.0.3 - 2026-07-15
+
+### Changed
+
+- Migrated to the `js-recon` organization. The action now installs `@js-recon/js-recon` (previously `@shriyanss/js-recon`), and the recommended usage is `uses: js-recon/js-recon-action@v1`.
+
+## 1.0.2 - 2026-07-09
+
+### Added
+
+- Publish action on GitHub Marketplace
+
+## 1.0.1 - 2026-07-09
 
 ### Fixed
 
