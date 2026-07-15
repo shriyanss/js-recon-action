@@ -1,6 +1,6 @@
 {
   "name": "js-recon-action",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "GitHub Action for JS Recon",
   "type": "module",
   "scripts": {

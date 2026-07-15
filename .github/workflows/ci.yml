@@ -89,7 +89,7 @@ jobs:
           ref: ${{ github.ref_name }}
 
       - name: Build Docker image
-        run: docker build -t shriyanss/js-recon-action .
+        run: docker build -t js-recon/js-recon-action .
 
   smoke_test:
     runs-on: ubuntu-latest
@@ -105,13 +105,13 @@ jobs:
       - name: Checkout js-recon-labs
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
-          repository: shriyanss/js-recon-labs
+          repository: js-recon/js-recon-labs
           path: js-recon-labs
 
       - name: Checkout js-recon-rules
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
-          repository: shriyanss/js-recon-rules
+          repository: js-recon/js-recon-rules
           path: js-recon-rules
 
       - name: Set up Node.js
@@ -122,7 +122,7 @@ jobs:
           cache-dependency-path: js-recon-labs/next_js/vuln-all-rules/package-lock.json
 
       - name: Build Docker image
-        run: docker build -t shriyanss/js-recon-action .
+        run: docker build -t js-recon/js-recon-action .
 
       - name: Install lab app dependencies
         working-directory: js-recon-labs/next_js/vuln-all-rules
@@ -161,7 +161,7 @@ jobs:
             -e INPUT_VULNERABILITY_SEVERITY=high \
             -e INPUT_OUTPUT_DIR=js-recon-output \
             -e GITHUB_OUTPUT=/tmp/github-output \
-            shriyanss/js-recon-action || true
+            js-recon/js-recon-action || true
           mkdir -p output
           docker cp jsr-action-smoke:/home/pptruser/js-recon-output/. ./output/ 2>/dev/null || true
           docker rm jsr-action-smoke
