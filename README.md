@@ -15,7 +15,7 @@
 
 ```yaml
 - name: JS Recon
-  uses: shriyanss/js-recon-action@v1
+  uses: js-recon/js-recon-action@v1
   with:
     url: https://your-target.com
 ```
@@ -27,7 +27,7 @@
   run: npm run build
 
 - name: JS Recon
-  uses: shriyanss/js-recon-action@v1
+  uses: js-recon/js-recon-action@v1
   with:
     url: http://localhost:3000
     start-cmd: npm start
@@ -81,7 +81,7 @@ JS Recon produces the following files in the output directory:
 If `.map` files are publicly accessible, the action fails by default:
 
 ```yaml
-- uses: shriyanss/js-recon-action@v1
+- uses: js-recon/js-recon-action@v1
   with:
     url: https://target.com
     break-on-map-files: true # default
@@ -94,7 +94,7 @@ To disable: set `break-on-map-files: false`.
 Control which severity level triggers a failure:
 
 ```yaml
-- uses: shriyanss/js-recon-action@v1
+- uses: js-recon/js-recon-action@v1
   with:
     url: https://target.com
     break-on-vulnerabilities: true
@@ -110,7 +110,7 @@ Available severities: `low`, `medium`, `high` (default: `high`).
 ```yaml
 - name: JS Recon
   id: jsrecon
-  uses: shriyanss/js-recon-action@v1
+  uses: js-recon/js-recon-action@v1
   with:
     url: https://target.com
 
